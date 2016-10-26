@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="test">
+<head>
+	<title>B-Info</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+</head>
+<body ng-controller="TestController as T">
+	
+	<div ng-repeat="name in T.names">{{ name }}</div>
+	
+	<script type="text/javascript">
+		(function(){
+			var app = angular.module('test', []);
+
+			app.controller('TestController', function(){
+				this.names = ['Nisarg', 'Himani', 'Bindu', 'Jitendra'];
+			});
+		})();
+	</script>
+</body>
+</html>
