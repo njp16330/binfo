@@ -10,6 +10,12 @@
 			});
 		};
 
+		$scope.runr = function(){
+			$http.get('/run_r').success(function(data) {
+				alert(data);
+			});
+		};
+
 		$scope.deleteFile = function(f) {
 			$http.post('/deleteFile',  {file: f}).success(function(data) {
 				if(data && data.toLowerCase() === '1'){

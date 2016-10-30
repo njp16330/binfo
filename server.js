@@ -5,7 +5,12 @@ var path = require('path');
 var formidable = require('formidable');
 var fs = require('fs');
 
+var R = require("r-script");
+
 //set the static directory to /public
+//var uploadsDir = __dirname + '/uploads';
+var uploadsDir = 'D:/uploads';
+
 app.use(express.static(__dirname + '/public')); 
 
 app.use(bodyParser.urlencoded({
@@ -18,7 +23,7 @@ app.use(bodyParser.json({
 
 app.get('/uploaded', function(req, res) {
 
-	fs.readdir(path.join(__dirname, '/uploads/'), (err, files) => {
+	fs.readdir(path.join(uploadsDir + '/'), (err, files) => {
 		if (err)
 			res.send(err)
 
@@ -31,7 +36,7 @@ app.post('/deleteFile', function(req, res){
 		res.json('Invalid File Name');
 	}
 
-	fs.unlink(path.join(__dirname, ('/uploads/' + req.body.file)), function(err){
+	fs.unlink(path.join((uploadsDir + '/' + req.body.file)), function(err){
 		if(err){
 			res.send(err);
 		}
@@ -51,7 +56,7 @@ app.post('/upload', function(req, res){
   form.multiples = true;
 
   // store all uploads in the /uploads directory
-  form.uploadDir = path.join(__dirname, '/uploads');
+  form.uploadDir = path.join(uploadsDir);
 
   // every time a file has been uploaded successfully,
   // rename it to it's orignal name
@@ -74,11 +79,31 @@ app.post('/upload', function(req, res){
 
 });
 
+app.get('/run_r', function(req, res) {
+	
+
+	var attitude = JSON.parse(
+  require("fs").readFileSync("r-in/attitude.json", "utf8"));
+
+	//console.log(attitude);
+
+R(express.static(__dirname + '/r-in/ex-async.R'))
+  .data({df: attitude, nGroups: 3, fxn: "mean" })
+  .call(function(err, d) {
+    if (err) console.log(err);
+    console.log(d);
+
+    res.json(d);
+  });
+});
+
+
+
 app.get('/ngtest', function(req, res) {
-	res.sendfile('./public/ngtest.html'); // load the single view file (angular will handle the page changes on the front-end)
+	res.sendfile('./public/ngtest.html');
 });
 app.get('/index', function(req, res) {
-	res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+	res.sendfile('./public/index.html');
 });
 
 // listen (start app with node server.js) ======================================

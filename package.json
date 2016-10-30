@@ -9,6 +9,7 @@
   "dependencies": {
     "body-parser" : "^1.4.3",
     "express": "^4.13.3",
-    "formidable": "^1.0.17"
+    "formidable": "^1.0.17",
+    "r-script": "^0.0.3"
   }
 }
