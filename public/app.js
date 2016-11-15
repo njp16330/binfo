@@ -12,7 +12,7 @@
 
 		$scope.runr = function(){
 			$http.get('/run_r').success(function(data) {
-				alert(data);
+				console.log(JSON.parse(data));
 				$scope.updateFileList();
 				
 			});
