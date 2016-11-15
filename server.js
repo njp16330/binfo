@@ -5,11 +5,13 @@ var path = require('path');
 var formidable = require('formidable');
 var fs = require('fs');
 
+const spawn = require('child_process').spawn;
+
 var R = require("r-script");
 
 //set the static directory to /public
-//var uploadsDir = __dirname + '/uploads';
-var uploadsDir = 'D:/uploads';
+var uploadsDir = __dirname + '/uploads';
+//var uploadsDir = 'D:/uploads';
 
 app.use(express.static(__dirname + '/public')); 
 
@@ -82,19 +84,42 @@ app.post('/upload', function(req, res){
 app.get('/run_r', function(req, res) {
 	
 
-	var attitude = JSON.parse(
-  require("fs").readFileSync("r-in/attitude.json", "utf8"));
+const bat = spawn('Rscript.exe', ['rstest.R', '< ex-async.R'], {
+	cwd: __dirname + '/r-in/',
+	env: process.env
+});
 
+bat.stdout.on('data', (data) => {
+  console.log(data);
+});
+
+bat.stderr.on('data', (data) => {
+  console.log(data);
+});
+
+bat.on('exit', (code) => {
+  console.log('Child exited with code ${code}');
+  res.json(code);
+});
+
+	/*var attitude = JSON.parse(require("fs").readFileSync("r-in/attitude.json", "utf8"));
+
+	var status = 0;
 	//console.log(attitude);
 
-R(express.static(__dirname + '/r-in/ex-async.R'))
+R(__dirname + '/r-in/ex-async.R')
   .data({df: attitude, nGroups: 3, fxn: "mean" })
   .call(function(err, d) {
-    if (err) console.log(err);
-    console.log(d);
-
-    res.json(d);
-  });
+  	if(status) return;
+    if (err) {
+    	res.send(err);
+    	status = 1;
+    }
+    else
+    {
+    	res.json(d);
+    }
+  });*/
 });
 
 
