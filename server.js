@@ -16,37 +16,37 @@ var uploadsDir = __dirname + '/uploads';
 app.use(express.static(__dirname + '/public')); 
 
 app.use(bodyParser.urlencoded({
-	'extended': 'true'
+  'extended': 'true'
 })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({
-	type: 'application/vnd.api+json'
+  type: 'application/vnd.api+json'
 }));
 
 app.get('/uploaded', function(req, res) {
 
-	fs.readdir(path.join(uploadsDir + '/'), (err, files) => {
-		if (err)
-			res.send(err)
+  fs.readdir(path.join(uploadsDir + '/'), (err, files) => {
+    if (err)
+      res.send(err)
 
-		res.json(files);
-	});
+    res.json(files);
+  });
 });
 
 app.post('/deleteFile', function(req, res){
-	if(!req.body.file){
-		res.json('Invalid File Name');
-	}
+  if(!req.body.file){
+    res.json('Invalid File Name');
+  }
 
-	fs.unlink(path.join((uploadsDir + '/' + req.body.file)), function(err){
-		if(err){
-			res.send(err);
-		}
+  fs.unlink(path.join((uploadsDir + '/' + req.body.file)), function(err){
+    if(err){
+      res.send(err);
+    }
 
-		else{
-			res.json(1);
-		}
-	});
+    else{
+      res.json(1);
+    }
+  });
 });
 
 app.post('/upload', function(req, res){
@@ -82,9 +82,9 @@ app.post('/upload', function(req, res){
 });
 
 app.get('/run_r', function(req, res) {
-	
+  
 
-const bat = spawn('Rscript.exe', ['rstest.R', '< ex-async.R'], {
+const bat = spawn('Rscript.exe', ['rstest.R'], {
 	cwd: __dirname + '/r-in/',
 	env: process.env
 });
@@ -102,22 +102,24 @@ bat.on('exit', (code) => {
   res.json(code);
 });
 
-	/*var attitude = JSON.parse(require("fs").readFileSync("r-in/attitude.json", "utf8"));
+	
 
-	var status = 0;
-	//console.log(attitude);
+  /*var attitude = JSON.parse(require("fs").readFileSync("r-in/attitude.json", "utf8"));
+
+  var status = 0;
+  //console.log(attitude);
 
 R(__dirname + '/r-in/ex-async.R')
   .data({df: attitude, nGroups: 3, fxn: "mean" })
   .call(function(err, d) {
-  	if(status) return;
+    if(status) return;
     if (err) {
-    	res.send(err);
-    	status = 1;
+      res.send(err);
+      status = 1;
     }
     else
     {
-    	res.json(d);
+      res.json(d);
     }
   });*/
 });
@@ -125,10 +127,10 @@ R(__dirname + '/r-in/ex-async.R')
 
 
 app.get('/ngtest', function(req, res) {
-	res.sendfile('./public/ngtest.html');
+  res.sendfile('./public/ngtest.html');
 });
 app.get('/index', function(req, res) {
-	res.sendfile('./public/index.html');
+  res.sendfile('./public/index.html');
 });
 
 // listen (start app with node server.js) ======================================
